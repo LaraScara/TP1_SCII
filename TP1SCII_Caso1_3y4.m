@@ -1,4 +1,4 @@
-%Caso de estudio 1 - Circuito RLC apartado 3 y 4
+%Caso de estudio 1 - Circuito RLC apartados 3 y 4
 clc, clear all, close all;
 
 %Importo gráficos de mediciones y grafico
