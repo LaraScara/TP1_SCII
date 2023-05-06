@@ -1,24 +1,27 @@
 %Caso de estudio 1 - Circuito RLC apartado 3 y 4
 clc, clear all, close all;
 
-%Importo gr·ficos de mediciones y grafico
+%Importo gr√°ficos de mediciones y grafico
 mediciones=xlsread('Curvas_Medidas_RLC.xls');
 %Columnas: Tiempo Corriente Vcap
 
-%Gr·fico de corriente
+%Gr√°fico de corriente
 figure(1)
 plot(mediciones(:,1),mediciones(:,2)); 
-title('i_a variable de estado x_1')
-xlabel('Tiempo [Seg.]');
-ylabel('Corriente [Amp.]');
+title('Corriente del circuito')
+xlabel('Tiempo (segundos)');
+ylabel('Corriente (ampere)');
+legend('i(t)','Location','northeast')
 
-%Gr·fico de voltaje de capacitor
+%Gr√°fico de voltaje de capacitor
 figure(2)
 plot(mediciones(:,1),mediciones(:,3)); 
-title('V_c var. de est. x_2')
+title('Voltaje en el capacitor')
 grid on;
-xlabel('Tiempo [Seg.]');
-ylabel('Voltaje [Volt]');
+xlabel('Tiempo (segundos)');
+ylabel('Voltaje (volts)');
+grid off;
+legend('vc(t)','Location','northeast')
 
 %Definicion del sistema RLC serie en variables de estado
 %Variables de estado: x1=i, x2=vc
@@ -40,21 +43,21 @@ for i=100:1:1000
         u(1,i)=-12;
     end
 end
-figure
-plot(t,u)
+%figure
+%plot(t,u)
 
-%ObtenciÛn de R L y C
+%Obtenci√≥n de R L y C
 
-%ALGORITMO DE CHEN para aproximaciÛn de FT de la forma
+%ALGORITMO DE CHEN para aproximaci√≥n de FT de la forma
 %G(s)=K*(T3*s+1)/((T1*s+1)*(T2*s+1))
 
 K=12;
 t0=101;
-t=50;
+t1=50;
 
-y1=mediciones(t0+t,3);
-y2=mediciones(t0+2*t,3);
-y3=mediciones(t0+3*t,3);
+y1=mediciones(t0+t1,3);
+y2=mediciones(t0+2*t1,3);
+y3=mediciones(t0+3*t1,3);
 
 k1=y1/K-1; 
 k2=y2/K-1; 
@@ -71,6 +74,19 @@ s=tf('s');
 G=12/((T1*s+1)*(T2*s+1));
 [num,den]=tfdata(G,'v');
 
+figure
+plot(mediciones(:,1),mediciones(:,3));
+hold on;
+plot(0.015,y1,'x');
+plot(0.02,y2,'x');
+plot(0.025,y3,'x');
+title('Voltaje en el capacitor')
+grid on;
+xlabel('Tiempo (segundos)');
+ylabel('Voltaje (volts)')
+legend({'vc(t)','vc(t1)','vc(2t1)','vc(3t1)'},'Location','northeast')
+grid off;
+
 %Se sabe que Vc/vin (s) = (1/(L*C)) / (s^2+R*s/L+1/(L*C))
 den_norm=den/(den(1))
 num_norm=num/(12*den(1))
@@ -80,25 +96,23 @@ Cap=1/(L*den_norm(3));
 
 figure
 [yaprox,taprox]=lsim(G,u/12,t);
-plot(0.015,y1,'x');
-hold on;
-plot(0.02,y2,'x');
-plot(0.025,y3,'x');
-plot(taprox,yaprox);
-title('Respuesta del voltaje del capacitor aproximada');
-xlabel('Tiempo');
-legend({'vc(t1)','vc(2t1)','vc(3t1)','vc(t)'},'Location','southeast')
+plot(taprox,yaprox,'r');
+title('Voltaje del capacitor aproximado');
+xlabel('Tiempo (segundos)');
+ylabel('Voltaje (volts)');
+legend('vc(t) aproximada','Location','northeast')
 
-%verifico que el sistema est· bien aproximado
+%verifico que el sistema est√° bien aproximado
 figure
 plot(mediciones(:,1),mediciones(:,3));
 hold on;
-plot(taprox,yaprox); %Son muy parecidos, la aproximaciÛn es v·lida
-legend({'vc(t) real','vc(t) aproximada'},'Location','southeast')
-title('Contraste de respuestas');
-xlabel('Tiempo');
+plot(taprox,yaprox); %Son muy parecidos, la aproximaci√≥n es v√°lida
+legend({'vc(t) real','vc(t) aproximada'},'Location','northeast')
+title('Contraste de respuestas (voltaje)');
+xlabel('Tiempo (segundos)');
+ylabel('Voltaje (volts)');
 
-%se verifica la corriente?
+%Verificaci√≥n de corriente
 
 %Matrices
 A=[-R/L -1/L; 1/Cap 0];
@@ -106,13 +120,16 @@ B=[1/L; 0];
 C=[1; 0]';
 D=0;
 
-%Definicion de la ecuaciÛn de estado y de salida (salida de corriente)
+%Definicion de la ecuaci√≥n de estado y de salida (salida de corriente)
 sys1=ss(A,B,C,D)
 figure
+plot(mediciones(:,1),mediciones(:,2));
+hold on;
 [yout,yt]=lsim(sys1,u,t);
 plot(yt,yout);
-hold on;
-plot(mediciones(:,1),mediciones(:,2)); %se verifica con los componentes obtenidos
-legend({'i(t) aproximada','i(t) real'},'Location','southeast')
-title('Contraste de respuestas');
-xlabel('Tiempo');
+legend({'i(t) real','i(t) aproximada'},'Location','northeast')
+title('Contraste de respuestas (corriente)');
+xlabel('Tiempo (segundos)');
+ylabel('Corriente (ampere)');
+
+disp('Terminado')
