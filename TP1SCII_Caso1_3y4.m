@@ -91,10 +91,12 @@ grid off;
 %Se sabe que Vc/vin (s) = (1/(L*C)) / (s^2+R*s/L+1/(L*C))
 den_norm=den/(den(1))
 num_norm=num/(12*den(1))
+sys_norm = tf(num_norm, den_norm)
 L=0.1;
 R=L*den_norm(2);
 Cap=1/(L*den_norm(3));
 
+%Grafico la aproximación
 figure
 [yaprox,taprox]=lsim(G,u/12,t);
 plot(taprox,yaprox,'r');
@@ -103,7 +105,7 @@ xlabel('Tiempo (segundos)');
 ylabel('Voltaje (volts)');
 legend('vc(t) aproximada','Location','northeast')
 
-%verifico que el sistema está bien aproximado
+%Verifico que el sistema está bien aproximado
 figure
 plot(mediciones(:,1),mediciones(:,3));
 hold on;
