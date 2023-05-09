@@ -41,7 +41,7 @@ for t=0:t_etapa:tF
  x2(ii)=X(2);%wp
  x3(ii)=X(3);%corriente
  x4(ii)=X(4);%corriente punto
- x5(k)=X(5);%tita, posici髇
+ x5(k)=X(5);%tita, posici贸n
  acc(k)=u;
 end
 
@@ -55,17 +55,17 @@ legend('e(t)','Location','southeast');
 axis([0 2.5 -0.2 1.2]);
 figure
 plot(t,acc);
-title('Entrada del sistema (tensi髇 de armadura)');
+title('Entrada del sistema (tensi贸n de armadura)');
 xlabel('Tiempo (segundos)');
 ylabel('Voltaje (volts)');
 legend('va(t)','Location','southeast');
 axis([0 2.5 -15 15]);
 figure
 plot(t,x5);
-title('Posici髇 angular del motor');
+title('Posici贸n angular del motor');
 xlabel('Tiempo (segundos)');
-ylabel('Posici髇 angular (rad)');
-legend('?(t)','Location','southeast');
+ylabel('Posici贸n angular (rad)');
+legend('胃(t)','Location','southeast');
 axis([0 2.5 -0.2 1.2]);
 
 disp('Terminado');
