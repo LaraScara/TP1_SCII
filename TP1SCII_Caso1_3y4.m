@@ -74,6 +74,7 @@ s=tf('s');
 G=12/((T1*s+1)*(T2*s+1));
 [num,den]=tfdata(G,'v');
 
+%Gráfica de los puntos seleccionados para Chen
 figure
 plot(mediciones(:,1),mediciones(:,3));
 hold on;
