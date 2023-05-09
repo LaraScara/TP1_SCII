@@ -1,7 +1,7 @@
 %Caso de estudio 2 - Motor CC apartado 3
 clc, close all;
 
-%Importo gr醘icos de mediciones y grafico
+%Importo gr谩ficos de mediciones y grafico
 mediciones=xlsread('Curvas_Medidas_Motor_2023.xls');
 %Columnas: Tiempo , velocidad angular , corriente , tension , torque
 
@@ -24,15 +24,23 @@ axis([0 0.6 -0.25 0.15]);
 
 figure
 plot(mediciones(:,1),mediciones(:,4)); %grafico de tension de entrada
-title('Entrada del sistema (tensi髇 de armadura)');
+title('Entrada del sistema (tensi贸n de armadura)');
 xlabel('Tiempo (segundos)');
 ylabel('Voltaje (volts)');
 legend('va(t)','Location','northeast');
 axis([0 0.6 -15 15]);
 
-%Obtenci髇 de FdT sin torque
+figure
+plot(mediciones(:,1),mediciones(:,5));%grafico del torque
+title('Torque de carga');
+xlabel('Tiempo (segundos)');
+ylabel('Torque (Nm)');
+legend('Tl(t)','Location','northeast');
+axis([0 0.6 -0.0012 0.0001]);
 
-%ALGORITMO DE CHEN para aproximaci髇 de FT de la forma
+%Obtenci贸n de FdT sin torque
+
+%ALGORITMO DE CHEN para aproximaci贸n de FT de la forma
 %G1(s)=K*(T3*s+1)/((T1*s+1)*(T2*s+1))
 K = 198.248802246762;
 a0=350;
@@ -61,7 +69,7 @@ T3=beta*(T1-T2)+T1;     %No hay cero, no se usa
 s=tf('s');
 G1=exp(-t0*s)*K/((T1*s+1)*(T2*s+1))
 
-%Gr醘ica de los puntos seleccionados para Chen
+%Gr谩fica de los puntos seleccionados para Chen
 figure
 plot(mediciones(:,1),mediciones(:,2));
 hold on;
@@ -76,9 +84,9 @@ legend('wr(t)','Location','northeast');
 axis([0 0.6 -45 210]);
 grid off;
 
-%Obtenci髇 de FdT con torque
+%Obtenci贸n de FdT con torque
 
-%ALGORITMO DE CHEN para aproximaci髇 de FT de la forma
+%ALGORITMO DE CHEN para aproximaci贸n de FT de la forma
 %G2(s)=K*(T3*s+1)/((T1*s+1)*(T2*s+1))
 K2 = -27;
 b0=15500;
@@ -106,7 +114,7 @@ T6=beta2*(T4-T5)+T4
 
 G2=exp(-tt*s)*(K-K2)+(T3*s+1)/((T4*s+1)*(T5*s+1))
 
-%Gr醘ica de los puntos seleccionados para Chen
+%Gr谩fica de los puntos seleccionados para Chen
 figure
 plot(mediciones(:,1),mediciones(:,2));
 hold on;
@@ -123,7 +131,7 @@ grid off;
 
 G=G1-G2
 
-%Comparaci髇 de los valores aproximados y los valores reales
+%Comparaci贸n de los valores aproximados y los valores reales
 figure
 plot(mediciones(:,1),mediciones(:,2));
 hold on
